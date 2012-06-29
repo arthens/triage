@@ -134,7 +134,7 @@ def view(request):
         'selected_project': project,
         'available_projects': Project.objects(),
         'instances': instances,
-        'github': GithubLinker(project.path)
+        'github': GithubLinker(project.github)
     }
 
     try:

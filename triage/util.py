@@ -40,16 +40,16 @@ class GithubLinker():
         return self.furl().add(path='commits/' + str(ref)).url
 
     def to_file(self, path, ref=None, line=None):
-        fragment_args = {}
+        fragment = ''
         if not ref:
             ref = self.default_branch
         if line:
-            fragment_args['L'] = str(line)
+            fragment = 'L'+str(line)
 
-        return self.furl().add(path='tree/'+str(ref), fragment_args=fragment_args).url
+        return self.furl().add(path='tree/'+str(ref)+'/'+path).set(fragment=fragment).url
 
     def to_diff(self, from_ref, to_ref):
-        return self.furl().add(path='compare/'+ str(from_ref) + '...' + str(to_ref))
+        return self.furl().add(path='compare/'+ str(from_ref) + '...' + str(to_ref)).url
 
 
 
