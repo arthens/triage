@@ -45,9 +45,10 @@ class Project(Document):
 
 
 class ProjectVersion(Document):
-    project = ListField(ReferenceField(Project))
+    project = ReferenceField(Project)
     version = StringField(required=True)
     previous = StringField()
+    created = IntField(required=True)
 
 
 class User(Document):
@@ -267,7 +268,7 @@ class Error(Document):
         error = cls(**msg)
         error.count = 0
         error.update_from_msg(msg)
-        return error
+        return error        
 
     def update_from_msg(self, msg):
         self.message = msg['message']

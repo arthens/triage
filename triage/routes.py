@@ -13,6 +13,7 @@ def routes(config):
     config.add_route('error_toggle_hide', '/projects/{project}/error/{id}/togglehide')
     # REST API
     config.add_route('api_log', 'api/log')
+    config.add_route('api_version', 'api/version')
     # Auth
     config.add_route('user_login', 'user/login')
     config.add_route('user_register', 'user/register')

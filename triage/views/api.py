@@ -1,8 +1,8 @@
 from pyramid.view import view_config
 import base64
 import json
-from triage.models import Error
-
+from triage.models import Error, Project, ProjectVersion
+from time import time
 
 @view_config(route_name='api_log', renderer='string')
 def log(request):
@@ -17,6 +17,28 @@ def log(request):
         return {'success': False}
 
     return {'success': True}
+
+
+
+@view_config(route_name='api_version', renderer='json', request_method='POST')
+def version(request):
+
+    project = Project.objects.get(token=request.POST.get('token'))
+    try:
+        previous = ProjectVersion.objects(project=project).order_by('-created')[0]
+    except:
+        previous = None
+
+    version = ProjectVersion()
+    version.project = project
+    version.created = int(time())
+    version.version = request.POST.get('version')
+    if previous:
+        version.previous = previous.version
+    version.save()
+
+    return {'success': True}
+
 
 
 def _format_backtrace(msg):
