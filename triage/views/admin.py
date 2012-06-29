@@ -6,7 +6,7 @@ from triage.forms import UserRegisterSchema, UserFormSchema, user_form_validator
 from deform import Form, ValidationFailure
 from pyramid.security import remember, forget
 from pyramid.security import authenticated_userid
-from triage.models import User
+from triage.models import User, Project
 from mongoengine.queryset import DoesNotExist
 from deform.widget import TextInputWidget
 from colander import Invalid
@@ -14,7 +14,6 @@ from colander import Invalid
 
 @view_config(route_name='admin_user', permission='authenticated', renderer='admin/users/list.html')
 def admin_user(request):
-
     return {
         'users': User.objects()
     }
@@ -102,9 +101,8 @@ def admin_user_delete(request):
         return HTTPNotFound()
 
 
-@view_config(route_name='admin_project', permission='authenticated', renderer='project/list.html')
+@view_config(route_name='admin_project', permission='authenticated', renderer='admin/projects/list.html')
 def admin_project(request):
-
     return {
         'projects': Project.objects()
     }

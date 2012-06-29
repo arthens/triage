@@ -1,0 +1,21 @@
+{% extends "layout/fluid.html" %}
+
+{% block content %}
+
+<div id="information">
+	<h2 class="new-project"><a href="">New project</a></h2>
+
+	<table class="table projects">
+		<tbody>
+			{% for project in projects %}
+				<tr>
+					<td><a href="">{{ project.name }}</a></td>
+					<td>{{ project.path }}</td>
+					<td>{{ project.github }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
