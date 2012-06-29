@@ -18,7 +18,8 @@ class FixedTimezone(tzinfo):
         return timedelta(0)
 
 
-from os.path import join as urljoin
+
+from furl import furl
 
 class GithubLinker():
     def __init__(self, project_path, default_branch=None):
@@ -27,25 +28,28 @@ class GithubLinker():
         self.default_branch = default_branch
         self.project_path = project_path
 
+    def furl(self):
+        return furl(self.project_path)
+    
     def to_project(self):
-        return self.project_path
+        return self.furl().url
 
     def to_commit(self, ref):
         if not ref:
             return ''
-        return urljoin(urljoin(self.project_path, 'commits'), ref)
+        return self.furl().add(path='commits/' + str(ref)).url
 
     def to_file(self, path, ref=None, line=None):
-        fragment = ''
+        fragment_args = {}
         if not ref:
             ref = self.default_branch
         if line:
-            fragment = '#L'+str(line)
+            fragment_args['L'] = str(line)
 
-        return urljoin(urljoin(urljoin(self.project_path, 'tree'), ref), path)+fragment
+        return self.furl().add(path='tree/'+str(ref), fragment_args=fragment_args).url
 
     def to_diff(self, from_ref, to_ref):
-        return urljoin(urljoin(self.project_path, 'compare'), from_ref + '...' + to_ref)
+        return self.furl().add(path='compare/'+ str(from_ref) + '...' + str(to_ref))
 
 
 
