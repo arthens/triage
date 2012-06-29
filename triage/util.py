@@ -18,6 +18,36 @@ class FixedTimezone(tzinfo):
         return timedelta(0)
 
 
+from os.path import join as urljoin
+
+class GithubLinker():
+    def __init__(self, project_path, default_branch=None):
+        if not default_branch:
+            default_branch = 'production'
+        self.default_branch = default_branch
+        self.project_path = project_path
+
+    def to_project(self):
+        return self.project_path
+
+    def to_commit(self, ref):
+        if not ref:
+            return ''
+        return urljoin(urljoin(self.project_path, 'commits'), ref)
+
+    def to_file(self, path, ref=None, line=None):
+        fragment = ''
+        if not ref:
+            ref = self.default_branch
+        if line:
+            fragment = '#L'+str(line)
+
+        return urljoin(urljoin(urljoin(self.project_path, 'tree'), ref), path)+fragment
+
+    def to_diff(self, from_ref, to_ref):
+        return urljoin(urljoin(self.project_path, 'compare'), from_ref + '...' + to_ref)
+
+
 
 class Paginator:
 

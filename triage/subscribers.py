@@ -25,6 +25,15 @@ def add_get_user(event):
         return
 
 
+@subscriber(BeforeRender)
+def add_file_path(event):
+
+    try:
+        event['file_path'] = lambda path: event['selected_project'].clean_file_path(path)
+    except:
+        return
+
+
 # Adds the user to the request after a context is found
 @subscriber(ContextFound)
 def add_user_to_request(event):

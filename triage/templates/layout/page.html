@@ -21,9 +21,9 @@
 									<b class="caret"></b>
 								</a>
 								<ul class="dropdown-menu">
-									{% for p in available_projects.itervalues() %}
-										<li {% if p.id == selected_project.id %}class="active"{% endif %}>
-											<a href="{{route_url('error_list', project=p.id)}}">{{ p.name }}</a>
+									{% for p in available_projects %}
+										<li {% if p.token == selected_project.token %}class="active"{% endif %}>
+											<a href="{{route_url('error_list', project=p.token)}}">{{ p.name }}</a>
 										</li>
 									{% endfor %}
 								</ul>

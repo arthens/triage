@@ -1,4 +1,4 @@
-<tr class="{{error.get_row_classes(user)}}" id="error-{{ error.id }}" data-errorid="{{ error.id }}" data-url="{{ route_url('error_view', project=selected_project.id, id=error.id) }}" data-timelatest="{{ error.timelatest }}">
+<tr class="{{error.get_row_classes(user)}}" id="error-{{ error.id }}" data-errorid="{{ error.id }}" data-url="{{ route_url('error_view', project=selected_project.token, id=error.id) }}" data-timelatest="{{ error.timelatest }}">
 	{% block error_row %}
 	<td class="occurances vmiddle">
 		{% block left_cell %}

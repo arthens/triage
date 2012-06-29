@@ -2,7 +2,7 @@
 
 {% block middlebar %}
 <div class="search">
-	<form action="{{ set_params({}) }}" method="get" id="errorlist-search">
+	<form action="" method="get" id="errorlist-search">
 		<div class="input-prepend">
 			<span class="add-on"><i class="icon-search"></i></span><input type="text" name="search" placeholder="message, type, user or tag" value="{{ search }}" class="searchfield span3" />
 		</div>
@@ -11,13 +11,13 @@
 
 <ul id="error-tabs" class="nav nav-tabs" data-show="{{show}}">
 	<li class="{{ switch(show=='open') }}" data-name="open">
-		<a href="{{route_url('error_list', project=selected_project.id)}}">Open (<span class="count">{{counts.open}}</span>)</a>
+		<a href="{{route_url('error_list', project=selected_project.token)}}">Open (<span class="count">{{counts.open}}</span>)</a>
 	</li>
 	<li class="{{ switch(show=='resolved') }}" data-name="resolved">
-		<a href="{{route_url('error_list', project=selected_project.id)}}?show=resolved">Resolved (<span class="count">{{counts.resolved}}</span>)</a>
+		<a href="{{route_url('error_list', project=selected_project.token)}}?show=resolved">Resolved (<span class="count">{{counts.resolved}}</span>)</a>
 	</li>
 	<li class="{{ switch(show=='mine') }}" data-name="mine">
-		<a href="{{route_url('error_list', project=selected_project.id)}}?show=mine">Mine (<span class="count">{{counts.mine}}</span>)</a>
+		<a href="{{route_url('error_list', project=selected_project.token)}}?show=mine">Mine (<span class="count">{{counts.mine}}</span>)</a>
 	</li>
 </ul>
 {% endblock %}
@@ -38,13 +38,13 @@
 
 	<ul id="order-items" class="nav nav-pills pull-right" data-orderby="{{order_by}}">
 		<li class="{{ switch(order_by=='date') }} {{direction}}" data-name="date">
-			<a href="{{route_url('error_list', project=selected_project.id)}}?show={{show}}&order_by=date&direction={{direction}}">Date <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=date&direction={{direction}}">Date <i class="icon-white"></i></a>
 		</li>
 		<li class="{{ switch(order_by=='occurances') }} {{direction}}" data-name="occurances">
-			<a href="{{route_url('error_list', project=selected_project.id)}}?show={{show}}&order_by=occurances&direction={{direction}}">Occurances <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=occurances&direction={{direction}}">Occurances <i class="icon-white"></i></a>
 		</li>
 		<li class="{{ switch(order_by=='activity') }} {{direction}}" data-name="activity">
-			<a href="{{route_url('error_list', project=selected_project.id)}}?show={{show}}&order_by=activity&direction={{direction}}">Activity <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=activity&direction={{direction}}">Activity <i class="icon-white"></i></a>
 		</li>
 	</ul>
 	<div style="clear: both;"></div>

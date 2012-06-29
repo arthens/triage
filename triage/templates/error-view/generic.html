@@ -7,7 +7,9 @@
 			{% if error.file %}
 				<li>
 				<span class="title">File</span>
-				{{ error.file }}
+				<a target="_blank" href="{{ github.to_file(file_path(error.file), error.lastcommit, error.line) }}">
+					{{ file_path(error.file) }}
+				</a>
 				</li>
 			{% endif %}
 			{% if error.line %}
@@ -18,11 +20,15 @@
 			{% endif %}
 			<li>
 				<span class="title">First occurance</span>
-				{{ date(error.timefirst, '%d %b %y, %I:%M%p', '%d %b %y, %I:%M%p') }}
+				<a target="_blank" href="{{ github.to_commit(error.firstcommit) }}">
+					{{ error.firstcommit|d('', True) }} {{ date(error.timefirst, '%d %b %y, %I:%M%p', '%d %b %y, %I:%M%p') }}
+				</a>
 			</li>
 			<li>
 				<span class="title">Latest occurance</span>
-				{{ date(error.timelatest, '%d %b %y, %I:%M%p', '%d %b %y, %I:%M%p') }}
+				<a target="_blank" href="{{ github.to_commit(error.lastcommit) }}">
+					{{ error.lastcommit|d('', True) }} {{ date(error.timelatest, '%d %b %y, %I:%M%p', '%d %b %y, %I:%M%p') }}
+				</a>
 			</li>
 			<li>
 				<span class="title">Number of occurances</span>
@@ -90,7 +96,9 @@
 					</td>
 					<td>
 						{% if row.file %}
-							{{ row|github_link }}
+							<a target="_blank" href="{{ github.to_file(file_path(row.file), error.lastcommit, row.line) }}">
+								{{ file_path(row.file) }}
+							</a>						
 						{% else %}
 							-
 						{% endif %}

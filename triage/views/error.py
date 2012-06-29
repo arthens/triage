@@ -2,14 +2,15 @@ from pyramid.view import view_config
 from pyramid.renderers import render_to_response
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 
-from triage.models import Error, Comment, Tag, User, ErrorInstance
+from triage.models import Error, Comment, Tag, User, ErrorInstance, Project
+from triage.util import GithubLinker
 from time import time
 from os import path
 
 import logging
 
 def get_errors(request, fetch_recent=False):
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     log = logging.getLogger(__name__)
 
@@ -25,11 +26,11 @@ def get_errors(request, fetch_recent=False):
         show = 'open'
 
     if show == 'open':
-        errors = Error.objects.active(selected_project)
+        errors = project.errors().active()
     elif show == 'resolved':
-        errors = Error.objects.resolved(selected_project)
+        errors = project.errors().resolved()
     elif show == 'mine':
-        errors = Error.objects.active(selected_project).filter(claimedby=request.user)
+        errors = project.errors().active().filter(claimedby=request.user)
 
     if search:
         errors.search(search)
@@ -77,8 +78,7 @@ def error_list(request):
 
 @view_config(route_name='error_list', permission='authenticated', xhr=False, renderer='error-list.html')
 def error_page(request):
-    available_projects = request.registry.settings['projects']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     search = request.GET.get('search', '')
     show = request.GET.get('show', 'open')  # open, resolved, mine
@@ -91,16 +91,16 @@ def error_page(request):
     errors = get_errors(request)
 
     counts = {
-        'open': Error.objects.active(selected_project).filter(seenby__ne=request.user).count(),
-        'resolved': Error.objects.resolved(selected_project).filter(seenby__ne=request.user).count(),
-        'mine': Error.objects.active(selected_project).filter(claimedby=request.user).count()
+        'open': project.errors().active().filter(seenby__ne=request.user).count(),
+        'resolved': project.errors().resolved().filter(seenby__ne=request.user).count(),
+        'mine': project.errors().active().filter(claimedby=request.user).count()
     }
 
     return {
         'search': search,
         'errors': errors,
-        'selected_project': selected_project,
-        'available_projects': available_projects,
+        'selected_project': project,
+        'available_projects': Project.objects(),
         'show': show,
         'order_by': order_by,
         'direction': direction,
@@ -116,8 +116,7 @@ def error_list_changes(request):
 
 @view_config(route_name='error_view', permission='authenticated')
 def view(request):
-    available_projects = request.registry.settings['projects']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     error_id = request.matchdict['id']
     try:
@@ -132,9 +131,10 @@ def view(request):
 
     params = {
         'error': error,
-        'selected_project': selected_project,
-        'available_projects': available_projects,
-        'instances': instances
+        'selected_project': project,
+        'available_projects': Project.objects(),
+        'instances': instances,
+        'github': GithubLinker(project.path)
     }
 
     try:
@@ -149,10 +149,10 @@ def view(request):
 @view_config(route_name='error_toggle_claim', permission='authenticated', xhr=True, renderer='json')
 def toggle_claim(request):
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         if error.claimedby and error.claimedby != request.user:
             return {'type': 'failure'}
 
@@ -167,10 +167,10 @@ def toggle_claim(request):
 @view_config(route_name='error_toggle_resolve', permission='authenticated', xhr=True, renderer='json')
 def toggle_resolve(request):
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         if error.hiddenby and error.hiddenby != request.user:
             return {'type': 'failure'}
 
@@ -186,10 +186,10 @@ def toggle_resolve(request):
 def tag_add(request):
     tag = request.matchdict['tag']
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         if tag in error.tags:
             return {'type': 'failure'}
 
@@ -205,10 +205,10 @@ def tag_add(request):
 def tag_remove(request):
     tag = request.matchdict['tag']
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         if tag not in error.tags:
             return {'type': 'failure'}
 
@@ -223,10 +223,10 @@ def tag_remove(request):
 @view_config(route_name='error_comment_add', permission='authenticated', xhr=True, renderer='json')
 def comment_add(request):
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         error.comments.append(Comment(
             author=request.user,
             content=request.POST.get('comment').strip(),
@@ -241,24 +241,21 @@ def comment_add(request):
 @view_config(route_name='error_toggle_hide')
 def toggle_hide(request):
     error_id = request.matchdict['id']
-    selected_project = get_selected_project(request)
+    project = get_selected_project(request)
 
     try:
-        error = Error.objects(project=selected_project['id']).with_id(error_id)
+        error = Error.objects(project=project.token).with_id(error_id)
         error.hiddenby = None if error.hiddenby else request.user
         error.save()
 
-        url = request.route_url('error_view', project=selected_project['id'], id=error_id)
+        url = request.route_url('error_view', project=project.token, id=error_id)
         return HTTPFound(location=url)
     except:
         return HTTPNotFound()
 
 
 def get_selected_project(request):
-    selected_project_key = request.matchdict['project']
-    available_projects = request.registry.settings['projects']
-
-    if selected_project_key in available_projects:
-        return available_projects[selected_project_key]
-    else:
+    try:
+        return Project.objects.get(token=request.matchdict['project'])
+    except:
         raise HTTPNotFound()

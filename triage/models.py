@@ -32,6 +32,22 @@ class ErrorHasher:
 
 class Project(Document):
     name = StringField(required=True)
+    token = StringField(required=True)
+    path = StringField()
+    github = StringField()
+
+    def clean_file_path(self, path):
+        return path.replace(self.path, '')
+
+    def errors(self):
+        return Error.objects(project=self.token)
+
+
+
+class ProjectVersion(Document):
+    project = ListField(ReferenceField(Project))
+    version = StringField(required=True)
+    previous = StringField()
 
 
 class User(Document):
@@ -136,15 +152,12 @@ class ErrorQuerySet(QuerySet):
 
         return self.filter(qObjects)
 
-    def resolved(self, project):
-        selected_project = project['id']
-        self.filter(project=selected_project)
-        return self.filter( hiddenby__exists=True)
+    def resolved(self):
+        return self.filter(hiddenby__exists=True)
 
-    def active(self, project):
-        selected_project = project['id']
-        self.filter(project=selected_project)
-        return self.filter( hiddenby__exists=False)
+    def active(self):
+        return self.filter(hiddenby__exists=False)
+
 
 keyword_re = re.compile(r'\w+')
 class Error(Document):
@@ -166,6 +179,8 @@ class Error(Document):
     backtrace = ListField(DictField())
     timelatest = FloatField()
     timefirst = FloatField()
+    firstcommit = StringField()
+    lastcommit = StringField()
     count = IntField()
     claimedby = ReferenceField(User)
     keywords = ListField(StringField())
@@ -195,6 +210,8 @@ class Error(Document):
                 'backtrace': msg['backtrace'],
                 'timelatest': msg['timelatest'],
                 'timefirst': msg['timelatest'],
+                'firstcommit': msg['commithash'],
+                'lastcommit': msg['commithash'],
                 'keywords': keywords,
                 'count': 1
         }
@@ -211,6 +228,7 @@ class Error(Document):
                 'context': msg['context'],
                 'backtrace': msg['backtrace'],
                 'timelatest': msg['timelatest'],
+                'lastcommit': msg['commithash']
             },
             '$unset': {
                 'hiddenby': 1
