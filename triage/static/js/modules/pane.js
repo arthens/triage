@@ -72,6 +72,11 @@ Triage.modules.pane = (function($, app) {
 		}
 	};
 
+	$('.pane').on("keydown", "textarea, input, select", jwerty.event('↑/→/↓/←/space', function (e) {
+		// Stopping pane bindings when the focus is in a textarea/input/select box
+		e.stopPropagation();
+	}));
+
 	var _moveItem = function(action) {
 		showPane();
 		var current = $('.pane .pane-actions li.pane-active');
@@ -87,13 +92,8 @@ Triage.modules.pane = (function($, app) {
 	var bindHotKeys = function(self) {
 		jwerty.key('←', function (e) { e.stopPropagation(); return _moveItem('left'); });
 		jwerty.key('→', function (e) { e.stopPropagation(); return _moveItem('right'); });
-		jwerty.key('space', function(e) {
-			if (!$('input[type=text]:focus, textarea:focus').length) {
-				e.stopPropagation();
-				togglePane();
-				return false;
-			}
-		});
+		jwerty.key('space', function(e) { e.stopPropagation(); togglePane(); return false; });
+		jwerty.key('esc', function(e) { e.stopPropagation(); hidePane(); return false; });
 	};
 
 	return {
