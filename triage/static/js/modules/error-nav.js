@@ -28,7 +28,7 @@ Triage.modules.errorNav = (function($, app) {
 			params['start'] = rowsLoaded; // start is 0 indexed
 		}
 
-		return window.location.origin + window.location.pathname + '?' + $.param(params);
+		return '//' + window.location.host + window.location.pathname + '?' + $.param(params);
 	};
 
 	var reloadList = function() {
