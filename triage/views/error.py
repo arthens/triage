@@ -45,6 +45,7 @@ def get_errors(request, fetch_recent=False):
 
     order_map = {
         'date': 'timelatest',
+        'firstoccurrence': 'timefirst',
         'occurances': 'count',
         'activity': 'comments'
     }
