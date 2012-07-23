@@ -79,3 +79,9 @@ class UserRegisterSchema(MappingSchema):
     password = SchemaNode(String(), description='Enter your password', widget=PasswordWidget())
     confirm_password = SchemaNode(String(), description='Confirm your password', widget=PasswordWidget())
     tzoffset = SchemaNode(Integer(), widget=HiddenWidget())
+
+class ProjectFormSchema(MappingSchema):
+    name = SchemaNode(String(), descriprtion='Project name')
+    token = SchemaNode(String(), description='token')
+    path = SchemaNode(String(), description='Path')
+    github = SchemaNode(String(), description='Github')

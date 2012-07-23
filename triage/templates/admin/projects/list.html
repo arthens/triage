@@ -3,19 +3,20 @@
 {% block content %}
 
 <div id="information">
-	<h2 class="new-project"><a href="">New project</a></h2>
+    <h2 class="new-project"><a href="">New project</a></h2>
 
-	<table class="table projects">
-		<tbody>
-			{% for project in projects %}
-				<tr>
-					<td><a href="">{{ project.name }}</a></td>
-					<td>{{ project.path }}</td>
-					<td>{{ project.github }}</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+    <table class="table projects">
+        <tbody>
+        {% for project in projects %}
+        <tr>
+            <td><a href="">{{ project.name }}</a></td>
+            <td>{{ project.path }}</td>
+            <td>{{ project.github }}</td>
+            <td class="actions"><a href="{{route_url('admin_project_edit', project=project.token)}}">edit</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}
