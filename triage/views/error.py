@@ -8,6 +8,11 @@ from time import time
 from os import path
 
 import logging
+import datetime
+import calendar
+
+#fixme
+import random
 
 def get_errors(request, fetch_recent=False):
     project = get_selected_project(request)
@@ -134,7 +139,8 @@ def view(request):
         'selected_project': project,
         'available_projects': Project.objects(),
         'instances': instances,
-        'github': GithubLinker(project.github)
+        'github': GithubLinker(project.github),
+        'trend': get_trend(error)
     }
 
     try:
@@ -143,8 +149,6 @@ def view(request):
     except:
         template = 'error-view/generic.html'
         return render_to_response(template, params)
-
-
 
 @view_config(route_name='error_toggle_claim', permission='authenticated', xhr=True, renderer='json')
 def toggle_claim(request):
@@ -253,9 +257,114 @@ def toggle_hide(request):
     except:
         return HTTPNotFound()
 
+@view_config(route_name='error_timeline', xhr=False, renderer='error-timeline.html')
+def timeline(request):
+
+    project = get_selected_project(request)
+
+    counts = {
+        'open': project.errors().active().filter(seenby__ne=request.user).count(),
+        'resolved': project.errors().resolved().filter(seenby__ne=request.user).count(),
+        'mine': project.errors().active().filter(claimedby=request.user).count()
+    }
+
+    return {
+        'selected_project': project,
+        'available_projects': Project.objects(),
+        'counts': counts,
+        'basename': path.basename
+    }
+
+
+@view_config(route_name='error_timeline_data', renderer='json')
+def timeline_data(request):
+    project = get_selected_project(request)
+
+    # grouping errors by type
+    hash_to_errors = {}
+    for error in project.raw_errors().order_by('timestamp'):
+        # creating a map for this error
+        if error.hash not in hash_to_errors:
+            hash_to_errors[error.hash] = {}
+
+        date = datetime.datetime.utcfromtimestamp(error.timestamp)
+        date = date.strptime(date.strftime('%Y-%m-%d'), '%Y-%m-%d')
+        day = int(date.strftime('%s')) * 1000
+
+        # initializing the count for this day
+        if day not in hash_to_errors[error.hash]:
+            hash_to_errors[error.hash][day] = 0
+
+        # incrementing the count for today
+        hash_to_errors[error.hash][day] += 1
+
+    # random fake data
+    for hash in sorted(hash_to_errors.keys()):
+        for i in [1,2,3,4,5,6,7,8]:
+            randomDay = day + ( i * 86400 ) * 1000
+            hash_to_errors[hash][randomDay] = random.randint(3, 20)
+
+    # blah
+    timeline_data = []
+    for hash in sorted(hash_to_errors.keys()):
+
+        datapoints = []
+        for date in sorted(hash_to_errors[hash].keys()):
+            datapoints.append([date, hash_to_errors[hash][date]])
+
+        timeline_data.append({
+            'label': hash,
+            'data': datapoints
+        })
+
+    return {
+        'type': 'success',
+        'data': timeline_data
+    }
+    #except:
+    #    return {'type': 'failure'}
 
 def get_selected_project(request):
     try:
         return Project.objects.get(token=request.matchdict['project'])
     except:
         raise HTTPNotFound()
+
+def get_trend(error):
+    errors = ErrorInstance.objects(hash=error.hash)
+
+    return put_errors_in_daily_buckets(errors)
+
+def put_errors_in_daily_buckets(errors):
+
+    #hack remove pls
+    base_date = 0
+
+    # group by day
+    day_to_count_map = {}
+    for error in sorted(errors, key=lambda x: x.timestamp):
+        index = date_to_utc_day_timestamp(error.timestamp)
+        base_date = index # remove
+
+        if index not in day_to_count_map:
+            day_to_count_map[index] = 0
+
+        day_to_count_map[index] += 1
+
+    # random fake data
+    for i in [1,2,3,4,5,6,7,8]:
+        nextDay = base_date + ( i * 86400 ) * 1000
+        day_to_count_map[nextDay] = random.randint(3, 20)
+
+    # transform into a [date, count] list
+    datapoints = []
+    for day in sorted(day_to_count_map.keys()):
+        datapoints.append([day, day_to_count_map[day]])
+
+    return datapoints
+
+def date_to_utc_day_timestamp(date):
+    # horrible, please fix
+    date = datetime.datetime.utcfromtimestamp(date)
+    date = date.strptime(date.strftime('%Y-%m-%d'), '%Y-%m-%d')
+    return int(date.strftime('%s')) * 1000

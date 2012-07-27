@@ -98,7 +98,7 @@
 						{% if row.file %}
 							<a target="_blank" href="{{ github.to_file(file_path(row.file), error.lastcommit, row.line) }}">
 								{{ file_path(row.file) }}
-							</a>						
+							</a>
 						{% else %}
 							-
 						{% endif %}
@@ -162,4 +162,24 @@
 		</form>
 	{% endif %}
 
+</div>
+
+<div class="pane-view pane-trend">
+	<h3>Trend</h3>
+
+	<div id="trend_placeholder" style="width:800px;height:180px"></div>
+
+	<script>
+		 var options = {
+		    series: { lines: { show: true }, points: { show: true } },
+	    	xaxis:{ mode: 'time', timeformat: "%y-%m-%d", minTickSize: [1, "day"] },
+	    	legend: { show: false }
+		};
+
+		var data = [{
+			data: {{ trend }}
+		}];
+
+		$.plot($('#trend_placeholder'), data, options);
+	</script>
 </div>

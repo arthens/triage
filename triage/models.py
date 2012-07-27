@@ -42,6 +42,9 @@ class Project(Document):
     def errors(self):
         return Error.objects(project=self.token)
 
+    def raw_errors(self):
+        return ErrorInstance.objects(project=self.token)
+
 
 
 class ProjectVersion(Document):
@@ -237,10 +240,10 @@ class Error(Document):
             '$inc': {
                 'count': 1
             },
-            '$addToSet': { 
+            '$addToSet': {
                 'keywords': {
-                    '$each' : keywords 
-                } 
+                    '$each' : keywords
+                }
             }
         }
 
@@ -268,7 +271,7 @@ class Error(Document):
         error = cls(**msg)
         error.count = 0
         error.update_from_msg(msg)
-        return error        
+        return error
 
     def update_from_msg(self, msg):
         self.message = msg['message']

@@ -1,0 +1,120 @@
+{% extends "layout/fluid.html" %}
+
+{% block middlebar %}
+<div class="search">
+	<form action="" method="get" id="errorlist-search">
+		<div class="input-prepend">
+			<span class="add-on"><i class="icon-search"></i></span><input type="text" name="search" placeholder="message, type, user or tag" value="{{ search }}" class="searchfield span3" />
+		</div>
+	</form>
+</div>
+
+<ul id="error-tabs" class="nav nav-tabs" data-show="{{show}}">
+	<li class="{{ switch(show=='open') }}" data-name="open">
+		<a href="{{route_url('error_list', project=selected_project.token)}}">Open (<span class="count">{{counts.open}}</span>)</a>
+	</li>
+	<li class="{{ switch(show=='resolved') }}" data-name="resolved">
+		<a href="{{route_url('error_list', project=selected_project.token)}}?show=resolved">Resolved (<span class="count">{{counts.resolved}}</span>)</a>
+	</li>
+	<li class="{{ switch(show=='mine') }}" data-name="mine">
+		<a href="{{route_url('error_list', project=selected_project.token)}}?show=mine">Mine (<span class="count">{{counts.mine}}</span>)</a>
+	</li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+
+		<script src="/static/js/jquery-1.7.1.min.js"></script>
+		<!--[if lte IE 8]><script src="/static/js/flot/excanvas.min.js"></script><![endif]-->
+		<script src="/static/js/flot/jquery.flot.js"></script>
+
+<div id="information">
+
+	<div id="placeholder" style="width:960px;height:300px"></div>
+
+	<script>
+
+	$.ajax({
+		url: '/projects/contests/timelinedata',
+		success: function(r){
+			 var options = {
+			    series: {
+			    	lines: { show: true },
+			    	points: { show: true }
+			    },
+		    	xaxis:{
+		    		show: true,
+		    		mode: 'time',
+		    		timeformat: "%y-%m-%d",
+		    		minTickSize: [1, "day"]
+		    	}
+			};
+
+			console.log(r.data);
+
+			$.plot($('#placeholder'), r.data, options);
+		}
+	});
+
+	</script>
+
+</div>
+
+<div class="pane-view pane-trend">
+	<h3>Trend</h3>
+
+	<div id="placeholder2" style="width:800px;height:300px"></div>
+
+	<script>
+
+		 var options = {
+		    series: {
+		    	lines: { show: true },
+		    	points: { show: true }
+		    },
+	    	xaxis:{
+	    		show: true,
+	    		mode: 'time',
+	    		timeformat: "%y-%m-%d",
+	    		minTickSize: [1, "day"]
+	    	}
+		};
+
+		var data = [{
+			label: 'mm',
+			data: [[1340892000000, 6], [1340978400000, 13], [1341064800000, 11], [1341151200000, 7], [1341237600000, 17], [1341324000000, 3], [1341410400000, 17], [1341496800000, 18], [1341583200000, 8]]
+		}];
+
+		console.log(data);
+
+		$.plot($('#placeholder2'), data, options);
+
+	</script>
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
+
+
+<div class="pane-padding"></div>
+<div class="pane tabbable tabs-below">
+
+	<div class="pane-container tab-content">
+		<div class="pane-inner">
+		</div>
+	</div>
+
+	<ul class="pane-actions nav nav-tabs">
+		<li data-view="summary"><a href="javascript:void(0);">Summary</a></li>
+		<li data-view="backtrace"><a href="javascript:void(0);">Backtrace</a></li>
+		<li data-view="context"><a href="javascript:void(0);">Context</a></li>
+		<li data-view="similar"><a href="javascript:void(0);">Similar Errors</a></li>
+		<li data-view="comments"><a href="javascript:void(0);">Comments</a></li>
+	</ul>
+
+</div>
+{% endblock %}
+

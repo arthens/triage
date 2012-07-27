@@ -30,7 +30,7 @@ class GithubLinker():
 
     def furl(self):
         return furl(self.project_path)
-    
+
     def to_project(self):
         return self.furl().url
 

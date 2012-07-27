@@ -5,6 +5,8 @@ def routes(config):
     config.add_route('error_list', '/projects/{project}')
     config.add_route('error_list_changes', '/projects/{project}/changes')
     config.add_route('error_view', '/projects/{project}/error/{id}')
+    config.add_route('error_timeline', '/projects/{project}/timeline')
+    config.add_route('error_timeline_data', '/projects/{project}/timelinedata')
     config.add_route('error_toggle_claim', '/projects/{project}/error/{id}/toggle/claim')
     config.add_route('error_toggle_resolve', '/projects/{project}/error/{id}/toggle/resolve')
     config.add_route('error_tag_add', '/projects/{project}/error/{id}/tag/add/{tag}')
@@ -18,10 +20,9 @@ def routes(config):
     config.add_route('user_login', 'user/login')
     config.add_route('user_register', 'user/register')
     config.add_route('user_logout', 'user/logout')
-   # Admin
+    # Admin
     config.add_route('admin_user', 'admin/users')
     config.add_route('admin_user_create', 'admin/users/{user}/create')
     config.add_route('admin_user_edit', 'admin/users/{user}/edit')
     config.add_route('admin_user_delete', 'admin/users/{user}/delete')
     config.add_route('admin_project', 'admin/projects')
- 
