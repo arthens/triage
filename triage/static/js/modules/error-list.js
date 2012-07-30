@@ -61,7 +61,7 @@ Triage.modules.errorList = (function($, app) {
 		start: function() {
 			bindHotKeys(this);
 
-			$('.multiselect').on('click', function(e)  {
+			$('.error-list').on('click', '.multiselect', function(e)  {
 				e.stopPropagation();
 			});
 
