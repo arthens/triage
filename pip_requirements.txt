@@ -13,9 +13,11 @@ WebError==0.10.3
 WebOb==1.2b2
 colander==0.9.4
 deform==0.9.3
+furl==0.3.2
 iso8601==0.1.4
 mongoengine==0.5.2
 msgpack-python==0.1.10
+orderedmultidict==0.7
 passlib==1.5.3
 peppercorn==0.3
 pymongo==2.0.1
