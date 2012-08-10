@@ -72,7 +72,7 @@ Triage.modules.errorNav = (function($, app) {
 		tab.siblings().removeClass('active').addClass('inactive');
 		tab.removeClass('inactive').addClass('active');
 
-		app.trigger('system.activecountchanged', parseInt(tab.find('.count').text()));
+		app.trigger('system.activecountchanged', parseInt(tab.find('.count').text(), 10));
 
 		reloadList();
 	};
@@ -110,8 +110,7 @@ Triage.modules.errorNav = (function($, app) {
 			params['search'] = search;
 		}
 
-		var url = window.location.origin + window.location.pathname
-			+ '/changes?' + $.param(params);
+		var url = window.location.origin + window.location.pathname + '/changes?' + $.param(params);
 
 		$.ajax({
 			url: url,
@@ -146,19 +145,19 @@ Triage.modules.errorNav = (function($, app) {
 			$('.changes-info .reload').on('click', function() {
 				reloadList();
 				return false;
-			})
+			});
 
 			$('#aggregate-action-container a').on('click', function() {
 				alert("Not implemented. Go to https://github.com/lwc/triage to fork and fix.");
 				return false;
-			})
+			});
 
 			app.on('error.seen', function(errorId) {
 				var currentTab = $('#error-tabs li.active');
 				var count;
 
 				if (currentTab.data('name') != 'mine') {
-					count = parseInt(currentTab.find('.count').text())-1;
+					count = parseInt(currentTab.find('.count').text(), 10)-1;
 					currentTab.find('.count').text(count);
 					app.trigger('system.activecountchanged', count);
 				}
@@ -175,9 +174,9 @@ Triage.modules.errorNav = (function($, app) {
 
 			$(function() {
 				var count = $('#error-tabs li.active .count');
-				app.trigger('system.activecountchanged', parseInt(count.text()));
+				app.trigger('system.activecountchanged', parseInt(count.text(), 10));
 
-				lastLoaded = parseInt($('.error-list tbody tr:first-child').data('timelatest'));
+				lastLoaded = parseInt($('.error-list tbody tr:first-child').data('timelatest'), 10);
 
 				window.setInterval(checkForUpdates, 600000);
 			});
