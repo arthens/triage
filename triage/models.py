@@ -42,6 +42,12 @@ class Project(Document):
     def errors(self):
         return Error.objects(project=self.token)
 
+    def update(project, data):
+        for field in ['name', 'token', 'path', 'github']:
+            project[field] = data[field]
+
+        return project
+
 
 
 class ProjectVersion(Document):

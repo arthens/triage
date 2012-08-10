@@ -2,7 +2,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.renderers import render_to_response
 from jinja2 import Markup
-from triage.forms import UserRegisterSchema, UserFormSchema, user_form_validator, user_register_validator
+from triage.forms import UserRegisterSchema, UserFormSchema, user_form_validator, user_register_validator, ProjectFormSchema
 from deform import Form, ValidationFailure
 from pyramid.security import remember, forget
 from pyramid.security import authenticated_userid
@@ -105,4 +105,36 @@ def admin_user_delete(request):
 def admin_project(request):
     return {
         'projects': Project.objects()
+    }
+
+@view_config(route_name='admin_project_edit', permission='authenticated', renderer='admin/projects/edit.html')
+def admin_project_edit(request):
+    def default_values(schema, project):
+        for field in schema.children:
+            field.default = project[field.name]
+
+    project = Project.objects.get(token=request.matchdict['project'])
+    schema = ProjectFormSchema()
+
+    default_values(schema, project)
+
+    form = Form(schema, buttons=('submit',))
+    form_render = None
+
+    if 'submit' in request.POST:
+        controls = request.POST.items()
+        try:
+            values = form.validate(controls)
+            project.update(values)
+            project.save()
+            default_values(schema, project)
+        except ValidationFailure, e:
+            form_render = e.render()
+
+    if not form_render:
+        form_render = form.render()
+
+    return {
+        'project': project,
+        'form': Markup(form_render)
     }
