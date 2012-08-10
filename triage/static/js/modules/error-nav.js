@@ -69,6 +69,7 @@ Triage.modules.errorNav = (function($, app) {
 	var updateShowTabs = function(tab) {
 
 		show = tab.data('name');
+		$('#information').removeClass().addClass(show);
 		tab.siblings().removeClass('active').addClass('inactive');
 		tab.removeClass('inactive').addClass('active');
 

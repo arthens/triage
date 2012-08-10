@@ -11,12 +11,14 @@
 
 <ul id="error-tabs" class="nav nav-tabs" data-show="{{show}}">
 	<li class="{{ switch(show=='open') }}" data-name="open">
-		<a href="{{route_url('error_list', project=selected_project.token)}}">Open (<span class="count">{{counts.open}}</span>)</a>
+		<a href="{{route_url('error_list', project=selected_project.token)}}" title="{{counts.open}} open, {{counts.openUnseen}} unseen">
+			Open (<span class="count">{{counts.open}}</span>/<span class="unseen">{{counts.openUnseen}}</span>)</a>
 	</li>
 	<li class="{{ switch(show=='resolved') }}" data-name="resolved">
-		<a href="{{route_url('error_list', project=selected_project.token)}}?show=resolved">Resolved (<span class="count">{{counts.resolved}}</span>)</a>
+		<a href="{{route_url('error_list', project=selected_project.token)}}?show=resolved" title="{{counts.resolved}} resolved, {{counts.resolvedUnseen}} unseen">
+			Resolved (<span class="count">{{counts.resolved}}</span>/<span class="unseen">{{counts.resolvedUnseen}}</span>)</a>
 	</li>
-	<li class="{{ switch(show=='mine') }}" data-name="mine">
+	<li class="{{ switch(show=='mine') }}" data-name="mine" title="{{counts.mine}} mine">
 		<a href="{{route_url('error_list', project=selected_project.token)}}?show=mine">Mine (<span class="count">{{counts.mine}}</span>)</a>
 	</li>
 </ul>
@@ -25,12 +27,14 @@
 
 {% block content %}
 
-<div id="information">
+<div id="information" class="{{ show }}">
 
 	<div id="aggregate-action-container" class="btn-toolbar pull-left">
 		<div class="btn-group">
 			<a class="btn" data-action="claim"><i class="icon-star"></i> Claim</a>
+			<a class="btn" data-action="unclaim"><i class="icon-star-empty"></i> Unclaim</a>
 			<a class="btn" data-action="resolve"><i class="icon-ok"></i> Resolve</a>
+			<a class="btn" data-action="unresolve"><i class="icon-fire"></i> Unresolve</a>
 			<a class="btn" data-action="markseen"><i class="icon-eye-open"></i> Mark as seen</a>
 			<a class="btn" data-action="markunseen"><i class="icon-eye-close"></i> Mark as unseen</a>
 		</div>

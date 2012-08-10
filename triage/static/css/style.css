@@ -259,6 +259,21 @@ body {
 	display: inline;
 }
 
+/*	Actions
+	------------------------------------------------------------ */
+
+.open a[data-action="unresolve"] {
+	display: none;
+}
+
+.resolved a[data-action="resolve"] {
+	display: none;
+}
+
+.mine a[data-action="claim"] {
+	display: none;
+}
+
 /*	search box
 	------------------------------------------------------------ */
 .search {

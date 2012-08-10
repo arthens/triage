@@ -93,8 +93,10 @@ def error_page(request):
     errors = get_errors(request)
 
     counts = {
-        'open': project.errors().active().filter(seenby__ne=request.user).count(),
-        'resolved': project.errors().resolved().filter(seenby__ne=request.user).count(),
+        'open': project.errors().active().filter().count(),
+        'openUnseen': project.errors().active().filter(seenby__ne=request.user).count(),
+        'resolved': project.errors().resolved().filter().count(),
+        'resolvedUnseen': project.errors().resolved().filter(seenby__ne=request.user).count(),
         'mine': project.errors().active().filter(claimedby=request.user).count()
     }
 
@@ -273,8 +275,12 @@ def mass(request):
 
             if action == 'claim':
                 error.claim(request.user)
+            elif action == 'unclaim':
+                error.remove_claim()
             elif action == 'resolve':
                 error.resolve(request.user)
+            elif action == 'unresolve':
+                error.unresolve()
             elif action == 'markseen':
                 error.mark_seen(request.user)
             elif action == 'markunseen':

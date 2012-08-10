@@ -288,9 +288,6 @@ class Error(Document):
     def resolve(self, user):
         self.hiddenby = user
 
-    def is_rsolved(self):
-        return self.hiddenby != None
-
     def unresolve(self):
         self.hiddenby = None
 
