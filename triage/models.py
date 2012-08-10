@@ -49,7 +49,6 @@ class Project(Document):
         return project
 
 
-
 class ProjectVersion(Document):
     project = ReferenceField(Project)
     version = StringField(required=True)
@@ -167,6 +166,8 @@ class ErrorQuerySet(QuerySet):
 
 
 keyword_re = re.compile(r'\w+')
+
+
 class Error(Document):
     meta = {
         'queryset_class': ErrorQuerySet,
@@ -243,17 +244,17 @@ class Error(Document):
             '$inc': {
                 'count': 1
             },
-            '$addToSet': { 
+            '$addToSet': {
                 'keywords': {
-                    '$each' : keywords 
-                } 
+                    '$each': keywords
+                }
             }
         }
 
-        collection = cls.objects._collection #probs a hack
+        collection = cls.objects._collection  # probs a hack
 
         # Update fails if document not found
-        collection.update({'hash':msg['hash']}, update_doc)
+        collection.update({'hash': msg['hash']}, update_doc)
         # insert fails if unique index violated
         collection.insert(insert_doc)
 
@@ -270,11 +271,10 @@ class Error(Document):
 
     @classmethod
     def create_from_msg(cls, msg):
-        now = int(time())
         error = cls(**msg)
         error.count = 0
         error.update_from_msg(msg)
-        return error        
+        return error
 
     def update_from_msg(self, msg):
         self.message = msg['message']
