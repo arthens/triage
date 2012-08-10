@@ -38,16 +38,16 @@
 
 	<ul id="order-items" class="nav nav-pills pull-right" data-orderby="{{order_by}}">
 		<li class="{{ switch(order_by=='date') }} {{direction}}" data-name="date">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=date&direction={{direction}}">Date <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=date&amp;direction={{direction}}">Date <i class="icon-white"></i></a>
 		</li>
 		<li class="{{ switch(order_by=='firstoccurrence') }} {{direction}}" data-name="firstoccurrence">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=firstoccurrence&direction={{direction}}">First Occurrence <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=firstoccurrence&amp;direction={{direction}}">First Occurrence <i class="icon-white"></i></a>
 		</li>
 		<li class="{{ switch(order_by=='occurances') }} {{direction}}" data-name="occurances">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=occurances&direction={{direction}}">Occurances <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=occurances&amp;direction={{direction}}">Occurances <i class="icon-white"></i></a>
 		</li>
 		<li class="{{ switch(order_by=='activity') }} {{direction}}" data-name="activity">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&order_by=activity&direction={{direction}}">Activity <i class="icon-white"></i></a>
+			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=activity&amp;direction={{direction}}">Activity <i class="icon-white"></i></a>
 		</li>
 	</ul>
 	<div style="clear: both;"></div>
