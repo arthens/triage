@@ -313,5 +313,3 @@ class Error(Document):
         self.hiddenby and classes.append('hidden')
         self.claimedby == user and classes.append('mine')
         return ' '.join(classes)
-
-

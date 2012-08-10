@@ -246,23 +246,6 @@ def comment_add(request):
         return {'type': 'failure'}
 
 
-#?? how is this different from error_toggle_resolve?
-@view_config(route_name='error_toggle_hide')
-def toggle_hide(request):
-    error_id = request.matchdict['id']
-    project = get_selected_project(request)
-
-    try:
-        error = Error.objects(project=project.token, id=error_id).get()
-        error.hiddenby = None if error.hiddenby else request.user
-        error.save()
-
-        url = request.route_url('error_view', project=project.token, id=error_id)
-        return HTTPFound(location=url)
-    except:
-        return HTTPNotFound()
-
-
 @view_config(route_name='error_mass', permission='authenticated', xhr=True, renderer='json')
 def mass(request):
     error_ids = request.matchdict['ids'].split(',')
