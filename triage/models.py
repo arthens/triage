@@ -276,6 +276,33 @@ class Error(Document):
         error.update_from_msg(msg)
         return error
 
+    def claim(self, user):
+        self.claimedby = user
+
+    def is_claimed(self):
+        return self.claimedby != None
+
+    def remove_claim(self):
+        self.claimedby = None
+
+    def resolve(self, user):
+        self.hiddenby = user
+
+    def is_rsolved(self):
+        return self.hiddenby != None
+
+    def unresolve(self):
+        self.hiddenby = None
+
+    def mark_seen(self, user):
+
+        if user not in self.seenby:
+            self.seenby.append(user)
+
+    def mark_unseen(self, user):
+        if user in self.seenby:
+            self.seenby.remove(user)  # does it work?
+
     def update_from_msg(self, msg):
         self.message = msg['message']
         self.timelatest = msg['timestamp']
@@ -289,3 +316,5 @@ class Error(Document):
         self.hiddenby and classes.append('hidden')
         self.claimedby == user and classes.append('mine')
         return ' '.join(classes)
+
+

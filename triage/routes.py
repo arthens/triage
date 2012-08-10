@@ -11,6 +11,7 @@ def routes(config):
     config.add_route('error_tag_remove', '/projects/{project}/error/{id}/tag/remove/{tag}')
     config.add_route('error_comment_add', '/projects/{project}/error/{id}/comment/add')
     config.add_route('error_toggle_hide', '/projects/{project}/error/{id}/togglehide')
+    config.add_route('error_mass', '/projects/{project}/errors/{ids}/mass/{action}')
     # REST API
     config.add_route('api_log', 'api/log')
     config.add_route('api_version', 'api/version')
@@ -25,4 +26,3 @@ def routes(config):
     config.add_route('admin_user_delete', 'admin/users/{user}/delete')
     config.add_route('admin_project_edit', 'admin/projects/{project}')
     config.add_route('admin_project', 'admin/projects')
-

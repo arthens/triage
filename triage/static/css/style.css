@@ -518,6 +518,11 @@ body {
 	display: block;
 }
 
+.loading [class^="icon-"]{
+  background: url("../img/spinner.gif") no-repeat center center;
+}
+
+
 /*	Admin users
 	------------------------------------------------------------ */
 

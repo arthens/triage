@@ -124,6 +124,28 @@ Triage.modules.errorNav = (function($, app) {
 		});
 	};
 
+	var processSelection = function(indicator, action) {
+		var ids = [];
+		$('.multiselect:checked').each(function(){
+			ids.push($(this).val());
+		});
+
+		if(ids.length > 0 ) {
+			var url = '//' + window.location.host + window.location.pathname + '/errors/' + ids.join(',') + '/mass/' + action;
+
+			indicator.addClass('loading');
+			$.ajax({
+				url: url,
+				success: function() {
+					reloadList();
+				},
+				complete: function() {
+					indicator.removeClass('loading');
+				}
+			});
+		}
+	};
+
 	return {
 		start: function() {
 			$('#error-tabs li').on('click', function() {
@@ -148,7 +170,8 @@ Triage.modules.errorNav = (function($, app) {
 			});
 
 			$('#aggregate-action-container a').on('click', function() {
-				alert("Not implemented. Go to https://github.com/lwc/triage to fork and fix.");
+				var link = $(this);
+				processSelection(link, link.data('action'));
 				return false;
 			});
 
