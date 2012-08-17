@@ -39,22 +39,19 @@
 	<div class="summary-tags">
 
 		{% if error.claimedby %}
-			{% if user == error.claimedby %}
-				<a href="{{ route_url('error_toggle_claim', project=selected_project.token, id=error._id) }}" class="btn btn-warning btn-unclaim">
-					<i class="icon-star-empty icon-white"></i> Unclaim</a>
-			{% else %}
-				<span>Claimed by {{error.claimedby.name}}</span>
-			{% endif %}
+			<span>Claimed by {{error.claimedby.name}}</span><br>
+			<a href="{{ route_url('error_toggle_claim', project=selected_project.token, id=error.id) }}" class="btn btn-warning btn-unclaim">
+				<i class="icon-star-empty icon-white"></i> Unclaim</a>
 		{% else %}
-			<a href="{{ route_url('error_toggle_claim', project=selected_project.token, id=error._id) }}" class="btn btn-primary btn-claim">
+			<a href="{{ route_url('error_toggle_claim', project=selected_project.token, id=error.id) }}" class="btn btn-primary btn-claim">
 				<i class="icon-star icon-white"></i> Claim</a>
 		{% endif %}
 
 		{% if error.hiddenby %}
-			<a href="{{ route_url('error_toggle_resolve', project=selected_project.token, id=error._id) }}" class="btn btn-danger btn-reopen">
+			<a href="{{ route_url('error_toggle_resolve', project=selected_project.token, id=error.id) }}" class="btn btn-danger btn-reopen">
 				<i class="icon-repeat icon-white"></i> Reopen</a>
 		{% else %}
-			<a href="{{ route_url('error_toggle_resolve', project=selected_project.token, id=error._id) }}" class="btn btn-success btn-resolve">
+			<a href="{{ route_url('error_toggle_resolve', project=selected_project.token, id=error.id) }}" class="btn btn-success btn-resolve">
 				<i class="icon-ok icon-white"></i> Resolve</a>
 		{% endif %}
 
@@ -66,13 +63,13 @@
 					<li>
 						<span class="label">
 							{{tag}}
-							<a href="{{ route_url('error_tag_remove', project=selected_project.token, id=error._id, tag='') }}" class="icon-remove icon-white tag-delete" data-tag="{{ tag }}"></a>
+							<a href="{{ route_url('error_tag_remove', project=selected_project.token, id=error.id, tag='') }}" class="icon-remove icon-white tag-delete" data-tag="{{ tag }}"></a>
 						</span>
 					</li>
 				{% endfor %}
 				</ul>
 			{% endif %}
-			<form class="tag-form" method="POST" action="{{ route_url('error_tag_add', project=selected_project.token, id=error._id, tag='') }}">
+			<form class="tag-form" method="POST" action="{{ route_url('error_tag_add', project=selected_project.token, id=error.id, tag='') }}">
 				<input class="input-medium tag-field" type="text" name="tag" placeholder="Type tag &amp; press enter">
 			</form>
 		</div>
@@ -98,7 +95,7 @@
 						{% if row.file %}
 							<a target="_blank" href="{{ github.to_file(file_path(row.file), error.lastcommit, row.line) }}">
 								{{ file_path(row.file) }}
-							</a>						
+							</a>
 						{% else %}
 							-
 						{% endif %}
@@ -156,7 +153,7 @@
 	{% endif %}
 
 	{% if user %}
-		<form class="comment-form" method="POST" action="{{ route_url('error_comment_add', project=selected_project.token, id=error._id, tag='') }}">
+		<form class="comment-form" method="POST" action="{{ route_url('error_comment_add', project=selected_project.token, id=error.id, tag='') }}">
 			<textarea name="comment"></textarea>
 			<input type="submit" name="submit" value="Submit" class="btn btn-primary btn-comment">
 		</form>

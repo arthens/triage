@@ -1,6 +1,6 @@
 <tr class="{{error.get_row_classes(user)}}" id="error-{{ error.id }}" data-errorid="{{ error.id }}" data-url="{{ route_url('error_view', project=selected_project.token, id=error.id) }}" data-timelatest="{{ error.timelatest }}">
 	{% block error_row %}
-	<td class="occurances vmiddle">
+	<td class="occurances vmiddle" nowrap>
 		{% block left_cell %}
 		<span class="dot"></span>
 		<input class="multiselect" type="checkbox" name="multiselect" value="{{ error.id }}" />

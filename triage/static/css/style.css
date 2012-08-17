@@ -259,6 +259,21 @@ body {
 	display: inline;
 }
 
+/*	Actions
+	------------------------------------------------------------ */
+
+.open a[data-action="unresolve"] {
+	display: none;
+}
+
+.resolved a[data-action="resolve"] {
+	display: none;
+}
+
+.mine a[data-action="claim"] {
+	display: none;
+}
+
 /*	search box
 	------------------------------------------------------------ */
 .search {
@@ -517,6 +532,11 @@ body {
 .page-loading .page-loader {
 	display: block;
 }
+
+.loading [class^="icon-"]{
+  background: url("../img/spinner.gif") no-repeat center center;
+}
+
 
 /*	Admin users
 	------------------------------------------------------------ */
