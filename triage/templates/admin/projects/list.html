@@ -9,7 +9,7 @@
         <tbody>
         {% for project in projects %}
         <tr>
-            <td><a href="">{{ project.name }}</a></td>
+            <td><a href="{{route_url('error_list', project=project.token)}}">{{ project.name }}</a></td>
             <td>{{ project.path }}</td>
             <td>{{ project.github }}</td>
             <td class="actions"><a href="{{route_url('admin_project_edit', project=project.token)}}">edit</a></td>
