@@ -30,21 +30,21 @@ class GithubLinker():
 
     def furl(self):
         return furl(self.project_path)
-    
+
     def to_project(self):
         return self.furl().url
 
     def to_commit(self, ref):
         if not ref:
             return ''
-        return self.furl().add(path='commits/' + str(ref)).url
+        return self.furl().add(path='commit/' + str(ref)).url
 
     def to_file(self, path, ref=None, line=None):
         fragment = ''
         if not ref:
             ref = self.default_branch
         if line:
-            fragment = 'L'+str(line)
+            fragment = 'L' + str(line)
 
         return self.furl().add(path='tree/'+str(ref)+'/'+path).set(fragment=fragment).url
 
