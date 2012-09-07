@@ -1,6 +1,6 @@
 <tr class="{{error.get_row_classes(user)}}" id="error-{{ error.id }}" data-errorid="{{ error.id }}" data-url="{{ route_url('error_view', project=selected_project.token, id=error.id) }}" data-timelatest="{{ error.timelatest }}">
 	{% block error_row %}
-	<td class="occurances vmiddle" nowrap>
+	<td class="occurances vmiddle">
 		{% block left_cell %}
 		<span class="dot"></span>
 		<input class="multiselect" type="checkbox" name="multiselect" value="{{ error.id }}" />
@@ -22,18 +22,24 @@
 		</div>
 		{% endblock %}
 	</td>
-	<td class="date">
-		{% block right_cell %}
-		<span class="tooltip-toggle" data-original-title="First seen: {{ date(error.timefirst) }}">{{ date(error.timelatest) }}</span><br/>
-		{% if error.claimedby and error.claimedby == user %}
-			<span class="claimed-by"><i class="icon-star"></i>&nbsp;You</span>
-		{% elif error.claimedby %}
-			<span class="claimed-by"><i class="icon-star"></i>&nbsp;{{ error.claimedby.name }}</span>
+	<td class="activity">
+		{% if error.claimedby %}
+			<span class="tooltip-toggle claimed-by" data-original-title="Claimed by {{ error.claimedby.name }}">
+				<i class="icon-star"></i> {% if error.claimedby == user %}You{% endif %}
+			</span>
 		{% endif %}
+
 		{% if error.comments %}
-			<i class="icon-comment"></i>&nbsp;{{ error.comments.__len__() }} comments
+			<span class="tooltip-toggle" data-original-title="Last comment by {{ error.comments[-1].author.name }}">
+				<i class="icon-comment"></i> {{ error.comments.__len__() }}
+			</span>
 		{% endif %}
-		{% endblock %}
+	</td>
+	<td class="date">
+		{{ date(error.timefirst) }}
+	</td>
+	<td class="date">
+		{{ date(error.timelatest) }}
 	</td>
 	{% endblock %}
 </tr>

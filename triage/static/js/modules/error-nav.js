@@ -154,7 +154,7 @@ Triage.modules.errorNav = (function($, app) {
 				return false;
 			});
 
-			$('#order-items li').on('click', function() {
+			$('#order-items th a').parent().on('click', function() {
 				updateOrderTabs($(this));
 				return false;
 			});

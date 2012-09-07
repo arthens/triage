@@ -65,7 +65,7 @@ Triage.modules.errorList = (function($, app) {
 				e.stopPropagation();
 			});
 
-			$('.error-list').on('click', '.error-list tr', function() {
+			$('.error-list').on('click', '.error-list tbody tr', function() {
 				changeSelection(this);
 				activateSelection();
 			});

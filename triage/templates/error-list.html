@@ -1,6 +1,7 @@
 {% extends "layout/fluid.html" %}
 
 {% block middlebar %}
+
 <div class="search">
 	<form action="" method="get" id="errorlist-search">
 		<div class="input-prepend">
@@ -29,7 +30,7 @@
 
 <div id="information" class="{{ show }}">
 
-	<div id="aggregate-action-container" class="btn-toolbar pull-left">
+	<div id="aggregate-action-container" class="btn-toolbar">
 		<div class="btn-group">
 			<a class="btn" data-action="claim"><i class="icon-star"></i> Claim</a>
 			<a class="btn" data-action="unclaim"><i class="icon-star-empty"></i> Unclaim</a>
@@ -40,25 +41,36 @@
 		</div>
 	</div>
 
-	<ul id="order-items" class="nav nav-pills pull-right" data-orderby="{{order_by}}">
-		<li class="{{ switch(order_by=='date') }} {{direction}}" data-name="date">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=date&amp;direction={{direction}}">Date <i class="icon-white"></i></a>
-		</li>
-		<li class="{{ switch(order_by=='firstoccurrence') }} {{direction}}" data-name="firstoccurrence">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=firstoccurrence&amp;direction={{direction}}">First Occurrence <i class="icon-white"></i></a>
-		</li>
-		<li class="{{ switch(order_by=='occurances') }} {{direction}}" data-name="occurances">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=occurances&amp;direction={{direction}}">Occurances <i class="icon-white"></i></a>
-		</li>
-		<li class="{{ switch(order_by=='activity') }} {{direction}}" data-name="activity">
-			<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=activity&amp;direction={{direction}}">Activity <i class="icon-white"></i></a>
-		</li>
-	</ul>
-	<div style="clear: both;"></div>
 	<div class="changes-info alert alert-info">
 		There have been <span class="errcount"></span> changes to errors since you last reloaded. <a class="reload" href="">Click to reload</a>
 	</div>
+
 	<table class="error-list table">
+		<thead>
+			<tr id="order-items" data-orderby="{{order_by}}">
+				<th class="{{ switch(order_by=='occurances') }} {{direction}}" data-name="occurances" width="100">
+					<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=occurances&amp;direction={{direction}}">
+						Occurances <i class="icon-white"></i>
+					</a>
+				</th>
+				<th>Error message</th>
+				<th class="{{ switch(order_by=='activity') }} {{direction}}" data-name="activity" width="60">
+					<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=activity&amp;direction={{direction}}">
+						Activity <i class="icon-white"></i>
+					</a>
+				</th>
+				<th class="{{ switch(order_by=='firstoccurrence') }} {{direction}}" data-name="firstoccurrence" width="80">
+					<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=firstoccurrence&amp;direction={{direction}}">
+						First Seen <i class="icon-white"></i>
+					</a>
+				</th>
+				<th class="{{ switch(order_by=='date') }} {{direction}}" data-name="date" width="80">
+					<a href="{{route_url('error_list', project=selected_project.token)}}?show={{show}}&amp;order_by=date&amp;direction={{direction}}">
+						Last Seen <i class="icon-white"></i>
+					</a>
+				</th>
+			</tr>
+		</thead>
 		<tbody>
 			{% include ['errors/list.html'] %}
 		</tbody>

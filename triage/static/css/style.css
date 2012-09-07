@@ -183,10 +183,7 @@ body {
 
 .error-list {
 	border: none;
-}
-
-.table tbody tr:hover td {
-	background-color: inherit;
+	table-layout: fixed;
 }
 
 .error-list tbody tr td {
@@ -201,10 +198,6 @@ body {
 	border: none;
 	margin-bottom: 5px;
 	background-color: #FFFFFF;
-}
-
-.error-list td.error {
-	width: 700px;
 }
 
 .error-list div.error {
@@ -222,14 +215,33 @@ body {
 	color: #aaa;
 }
 
+#information th {
+	white-space: nowrap;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+#information th.active {
+	background-color: #0088CC;
+}
+
+#information th.active a {
+	color: #FFFFFF;
+}
+
 #information td.occurances {
 	width: 80px;
 	text-align: left;
+	white-space: nowrap;
 }
 
 #information td.date {
-	text-align: right;
+	text-align: center;
 	white-space: nowrap;
+}
+
+#information td.activity {
+	white-space: nowrap;
+	text-align: right;
 }
 
 #information .count {
